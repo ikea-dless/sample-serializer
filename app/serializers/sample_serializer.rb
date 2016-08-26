@@ -1,3 +1,3 @@
 class SampleSerializer < ActiveModel::Serializer
-  attributes :name
+  attributes :id, :name
 end
