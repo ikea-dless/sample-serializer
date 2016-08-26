@@ -1,5 +1,4 @@
 class UserSerializer < ApplicationSerializer
-  binding.pry
   attributes :id, :name
   has_many :posts
 
