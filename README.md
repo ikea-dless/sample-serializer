@@ -20,15 +20,25 @@
 - 直感的
   - クラス作って、attribute定義する
 - ApplicationSerializerも定義できる
-  - まあ当然
-- Adapterでjsonのフォーマットが決まる？
+- Adapterでjsonのフォーマットを定義する
   - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/adapters.md
-  - デフォルトではattributesアダプターで特に仕様には則っていない
-    - ルートキーなしの割りとよく見るやつ
-  - ルートキーある版とか、jsonapi仕様とか、ある
-  - 自分でも書ける(つらそう)
+  - デフォルトではattributesアダプター
+    - ルートキーなしで、そのままattributeを吐き出す
+    - ルートキーありの :json アダプターとjson_apiに則った:json_apiアダプターもある
+    - けっこう簡単に自分でも書けそう
+    - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/adapters
+    .md#advanced-adapter-configuration
 - ルートキーをcamelとかback camelとかunder scoreとか変更できる
   - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/key_transforms.md
+  
+  | Option | Result |
+  |----|----|
+  | `:camel` | ExampleKey |
+  | `:camel_lower` | exampleKey |
+  | `:dash` | example-key |
+  | `:unaltered` | the original, unaltered key |
+  | `:underscore` | example_key |
+  | `nil` | use the adapter default |
 
 - serializer上でmethodを定義
   - attributeをoverrideできる
