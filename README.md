@@ -186,33 +186,27 @@
   - action_controllerのインスタンス変数はviewテンプレートじゃないので受け取れない
   - current_user的なscopeを取得したいときはcontroller側にメソッドを生やす
 
-```ruby
-helper_method :current_member
-serialization_scope :current_member # デフォルトはcurrent_user
+  ```ruby
+  serialization_scope :current_member # デフォルトはcurrent_user
 
-private
+  private
 
-def current_member
-  @authenticated_member
-end
-```
+  def current_member
+    @authenticated_member
+  end
+  ```
 
-- def name; endみたいにattribute nameでmethod定義するより、attributeにブロック渡すほうが、良さそう
-  - def hogeはあくまでメソッドとして、とどめて、attributeに変更加えたいときはblock渡すべき
-
-```ruby
-def name
-object.name << "!!!"
-end
-
-attribute name do # ActiveModel::Serializer::Attributes::ClassMethods#attribute
-object.name << "!!!"
-end
-```
-
-- render json したときにrailsはまずserializerを読みにいく
 - serializerをrender jsonオプションに渡して指定できる
   - each_serializerとserializerオプションがある
+  ```ruby
+  render json: @post, serializer: CommentSerializer
+  render json: @posts, each_serializer: ReviewsSerializer
+  ```
+
+  - renderのオプションで特定のフィールドを指定できる(それ以外は表示しない)
+    ```ruby
+    render json: User.create(activation_state: 'anonymous'), fields: { user: [:access_token] }
+    ```
 
 - Non ActiveRecordオブジェクトはどうやってシリアライズする？
   - いわゆるvalue object的なやつ
@@ -221,15 +215,8 @@ end
     - ただ、includeではなく継承なので、使いづらい部分はある
     - issueあった(修正されそう)
       - https://github.com/rails-api/active_model_serializers/issues/1877
-- renderのオプションで特定のフィールドを指定できる
-  - fields: { users: [:name] }
-- jsonのkeyはなんだかんだいい感じに指定できる
-- instrumentationも提供されている
-- 独自Adapterを書くのはそんなに難しくなさそう
-  - meta入れたいだけだったら jsonアダプター使うのが良さそう
-    - metaの中身はハッシュで指定できそう
-  - いろいろひっくるめてASM Wayに乗りたいんであればjsonapiアダプターが良さそう
-  - metaを許容する設計にすれば良さそう
+
+TODO: 複雑なJSONをレンダリングするサンプル
 
 #### 総括
 - json:apiに合わせた設計はされていくだろう
@@ -239,3 +226,4 @@ end
 - 総じてActiveModelライクな感じだった
 - メジャーバージョンを切っていないので不安要素は残るが、実戦投入するには問題なさそう
   - issue見て、クリティカルなバグがないことを確認すべき
+- AMS関係ないけど、metaを入れたくなったときに、許容できるような設計にしておくべき
