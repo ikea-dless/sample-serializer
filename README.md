@@ -9,14 +9,15 @@
 - [v0.10.xのドキュメント](https://github.com/rails-api/active_model_serializers/tree/master/docs)
 - json:apiの使用にしたがってparse, validateするjsonapi gemに依存している
 
-##### [json:api](http://jsonapi.org/)
-- APIで返すjson形式の標準化をしようとしている
-- v1.0 stable
-- アンチ自転車小屋の議論(CoC)
+  ###### [json:api](http://jsonapi.org/)
+  - APIで返すjson形式の標準化をしようとしている
+  - v1.0 stable
+  - アンチ自転車小屋の議論(CoC)
 
 ##### いったん[getting start](https://github.com/rails-api/active_model_serializers/blob/master/docs/general/getting_started.md)する
 - 基本はモデルと1:1
   - モデルがネームスペース切ってたら、serializerもネームスペースをあわせる
+  - Api::Userモデルに対するSerializerはApi::UserSerializer
 - 直感的
   - クラス作って、attribute定義する
 - ApplicationSerializerも定義できる
@@ -147,28 +148,39 @@
   has_many :users, serializer: OwnersSerializer
   ```
   - if, unless
+
+    ```ruby
+    belongs_to :user, if: :visible?
+
+    def visible?
+      record.visible?
+    end
+    ```
+    - serializerに定義するメソッドは、本当にserializerに定義すべきか考えないと、イカンコードになりそう
+
   - virtual_value: ダミーデータ使える
     - アソシエーション先をダミーデータにできる
+
     ```ruby
     has_many :posts, virtual_value: [{ id: 1 }, { id: 2 }]
     ```
+
   - polymorphic関連もよしなにやってくれる
   - blockも渡せる
-  ```ruby
-  has_many :posts do
-    
-  end
+    - いつ使うか不明
 
-- 総じてActiveModelって感じ
+    ```ruby
+    has_many :posts do
+      Post.new(title: "hoge")
+    end
+    ```
 
 - caching
   - railsのfragment_cacheっぽい
   - jsonのkeyごととかで設定できる
   - https://github.com/rails-api/active_model_serializers/issues/1586
+    - バグ健在
     - キャッシュ使うときはちゃんとベンチ取る必要ありそう
-
-- 基本はjsonapiに合わせて実装されていきそう
-- jsonapiに乗っかるんだったら最高だと思う
 
 - scope
   - action_controllerのインスタンス変数はviewテンプレートじゃないので受け取れない
@@ -207,8 +219,8 @@ end
   - https://github.com/rails-api/active_model_serializers/blob/master/docs/howto/serialize_poro.md
   - ActiveModelSerializers::Modelを継承させると楽に実装できそう
     - ただ、includeではなく継承なので、使いづらい部分はある
-  - ユースケース自体は少なそう
-  - jbuilderの手軽さに近いものを感じる
+    - issueあった(修正されそう)
+      - https://github.com/rails-api/active_model_serializers/issues/1877
 - renderのオプションで特定のフィールドを指定できる
   - fields: { users: [:name] }
 - jsonのkeyはなんだかんだいい感じに指定できる
@@ -218,3 +230,12 @@ end
     - metaの中身はハッシュで指定できそう
   - いろいろひっくるめてASM Wayに乗りたいんであればjsonapiアダプターが良さそう
   - metaを許容する設計にすれば良さそう
+
+#### 総括
+- json:apiに合わせた設計はされていくだろう
+- json:apiに準拠するのであれば、だいぶ幸せな世界が待っているはず
+- serializerをバンバン切っていけば結構柔軟にできそう
+  - serializerの切り方は少し考えないといけなさそう
+- 総じてActiveModelライクな感じだった
+- メジャーバージョンを切っていないので不安要素は残るが、実戦投入するには問題なさそう
+  - issue見て、クリティカルなバグがないことを確認すべき
