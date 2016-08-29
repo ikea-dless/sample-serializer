@@ -204,9 +204,9 @@
   ```
 
   - renderのオプションで特定のフィールドを指定できる(それ以外は表示しない)
-    ```ruby
-    render json: User.create(activation_state: 'anonymous'), fields: { user: [:access_token] }
-    ```
+  ```ruby
+  render json: User.create(activation_state: 'anonymous'), fields: { user: [:access_token] }
+  ```
 
 - Non ActiveRecordオブジェクトはどうやってシリアライズする？
   - いわゆるvalue object的なやつ
@@ -219,11 +219,11 @@
 TODO: 複雑なJSONをレンダリングするサンプル
 
 #### 総括
-- json:apiに合わせた設計はされていくだろう
+- 今後json:apiに合わせた実装にはなっていきそう
 - json:apiに準拠するのであれば、だいぶ幸せな世界が待っているはず
 - serializerをバンバン切っていけば結構柔軟にできそう
-  - serializerの切り方は少し考えないといけなさそう
-- 総じてActiveModelライクな感じだった
+  - serializerの切り方は少し考えないといけない
+- 総じてActiveModelライクな感じだった(疎結合)
 - メジャーバージョンを切っていないので不安要素は残るが、実戦投入するには問題なさそう
   - issue見て、クリティカルなバグがないことを確認すべき
 - AMS関係ないけど、metaを入れたくなったときに、許容できるような設計にしておくべき
