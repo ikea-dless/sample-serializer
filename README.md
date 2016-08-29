@@ -2,7 +2,9 @@
 
 ## 候補者
 - ActiveModelSerializer
+
 ### 特徴をざっくり
+
 #### ActiveModelSerializer
 - [v0.10.xのドキュメント](https://github.com/rails-api/active_model_serializers/tree/master/docs)
 - json:apiの使用にしたがってparse, validateするjsonapi gemに依存している
@@ -72,13 +74,13 @@ end
   - def hogeはあくまでメソッドとして、とどめて、attributeに変更加えたいときはblock渡すべき
 
 ```ruby
-  def name
-    object.name << "!!!"
-  end
-  
-  attribute name do # ActiveModel::Serializer::Attributes::ClassMethods#attribute
-    object.name << "!!!"
-  end
+def name
+object.name << "!!!"
+end
+
+attribute name do # ActiveModel::Serializer::Attributes::ClassMethods#attribute
+object.name << "!!!"
+end
 ```
 
 - render json したときにrailsはまずserializerを読みにいく
