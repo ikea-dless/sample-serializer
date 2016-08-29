@@ -24,13 +24,89 @@
   - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/adapters.md
   - デフォルトではattributesアダプター
     - ルートキーなしで、そのままattributeを吐き出す
+    ```
+    {
+      "title": "Title 1",
+      "body": "Body 1",
+      "publish_at": "2020-03-16T03:55:25.291Z",
+      "author": {
+        "first_name": "Bob",
+        "last_name": "Jones"
+      },
+      "comments": [
+        {
+          "body": "cool"
+        },
+        {
+          "body": "awesome"
+        }
+      ]
+    }
+    ```
     - ルートキーありの :json アダプターとjson_apiに則った:json_apiアダプターもある
+    ```
+    {
+      "post": {
+        "title": "Title 1",
+        "body": "Body 1",
+        "publish_at": "2020-03-16T03:55:25.291Z",
+        "author": {
+          "first_name": "Bob",
+          "last_name": "Jones"
+        },
+        "comments": [{
+          "body": "cool"
+        }, {
+          "body": "awesome"
+        }]
+      }
+    }
+    ```
+    ↓ json:api仕様
+    ```
+    {
+      "data": {
+        "id": "1337",
+        "type": "posts",
+        "attributes": {
+          "title": "Title 1",
+          "body": "Body 1",
+          "publish-at": "2020-03-16T03:55:25.291Z"
+        },
+        "relationships": {
+          "author": {
+            "data": {
+              "id": "1",
+              "type": "authors"
+            }
+          },
+          "comments": {
+            "data": [{
+              "id": "7",
+              "type": "comments"
+            }, {
+              "id": "12",
+              "type": "comments"
+            }]
+          }
+        },
+        "links": {
+          "post-authors": "https://example.com/post_authors"
+        },
+        "meta": {
+          "rating": 5,
+          "favorite-count": 10
+        }
+      }
+    }
+    ```
     - けっこう簡単に自分でも書けそう
-    - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/adapters
-    .md#advanced-adapter-configuration
+    - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/adapters.md#advanced-adapter-configuration
+    - jsonアダプターでも21行程度
+      - https://github.com/rails-api/active_model_serializers/blob/master/lib/active_model_serializers/adapter/json.rb
 - ルートキーをcamelとかback camelとかunder scoreとか変更できる
   - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/key_transforms.md
-  
+
   | Option | Result |
   |----|----|
   | `:camel` | ExampleKey |
@@ -42,6 +118,18 @@
 
 - serializer上でmethodを定義
   - attributeをoverrideできる
+  ```
+  class SampleSerializer < ActiveModel::Serializer
+    # attributes :id, :name
+    attribute id do
+      object.id.to_s
+    end
+    
+    def name do
+      object.name << "!!"
+    end
+  end
+  ```
 - アソシエーションタイプ
   - has_one, has_many, belongs_to
 - いくつかオプションを渡せる
