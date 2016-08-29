@@ -24,7 +24,7 @@
   - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/adapters.md
   - デフォルトではattributesアダプター
     - ルートキーなしで、そのままattributeを吐き出す
-    ```
+    ```json
     {
       "title": "Title 1",
       "body": "Body 1",
@@ -44,7 +44,7 @@
     }
     ```
     - ルートキーありの :json アダプターとjson_apiに則った:json_apiアダプターもある
-    ```
+    ```json
     {
       "post": {
         "title": "Title 1",
@@ -63,7 +63,7 @@
     }
     ```
     ↓ json:api仕様
-    ```
+    ```json
     {
       "data": {
         "id": "1337",
@@ -107,40 +107,57 @@
 - ルートキーをcamelとかback camelとかunder scoreとか変更できる
   - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/key_transforms.md
 
-  | Option | Result |
-  |----|----|
-  | `:camel` | ExampleKey |
-  | `:camel_lower` | exampleKey |
-  | `:dash` | example-key |
-  | `:unaltered` | the original, unaltered key |
-  | `:underscore` | example_key |
-  | `nil` | use the adapter default |
+| Option | Result |
+|----|----|
+| `:camel` | ExampleKey |
+| `:camel_lower` | exampleKey |
+| `:dash` | example-key |
+| `:unaltered` | the original, unaltered key |
+| `:underscore` | example_key |
+| `nil` | use the adapter default |
 
 - serializer上でmethodを定義
   - attributeをoverrideできる
-  ```
+  - defで定義する方法とattributeで定義する方法がある
+    - 個人的にはdefにはロジックを記述したいから、基本はattribute使いたい
+
+  ```ruby
   class SampleSerializer < ActiveModel::Serializer
     # attributes :id, :name
     attribute id do
       object.id.to_s
     end
-    
+
     def name do
       object.name << "!!"
     end
   end
   ```
+
 - アソシエーションタイプ
   - has_one, has_many, belongs_to
+  - serializerからserializerへのリレーション
 - いくつかオプションを渡せる
   - jsonのkey
+  ```ruby
+  has_one :user, key: :owner
+  ```
   - serializer: モデルに紐付いていないserializerを指定できる
+  ```ruby
+  has_many :users, serializer: OwnersSerializer
+  ```
   - if, unless
   - virtual_value: ダミーデータ使える
-    - アソシエーションが定義されていないとダメ
-    - attributeごとにダミーデータを指定できたりしない
+    - アソシエーション先をダミーデータにできる
+    ```ruby
+    has_many :posts, virtual_value: [{ id: 1 }, { id: 2 }]
+    ```
   - polymorphic関連もよしなにやってくれる
   - blockも渡せる
+  ```ruby
+  has_many :posts do
+    
+  end
 
 - 総じてActiveModelって感じ
 
