@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
 
   private
 
-  def current_member
-    User.first
-  end
+    def current_member
+      User.first
+    end
 end

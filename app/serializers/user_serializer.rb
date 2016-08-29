@@ -3,6 +3,6 @@ class UserSerializer < ApplicationSerializer
   has_many :posts
 
   attribute :name do
-    object.name << "hoge"
+    object.name << 'hoge'
   end
 end
