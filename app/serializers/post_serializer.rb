@@ -6,7 +6,6 @@ class PostSerializer < ApplicationSerializer
   end
 
   attribute :user_name do
-    "user_name"
+    'user_name'
   end
-
 end
