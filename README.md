@@ -105,6 +105,25 @@
     - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/adapters.md#advanced-adapter-configuration
     - jsonアダプターでも21行程度
       - https://github.com/rails-api/active_model_serializers/blob/master/lib/active_model_serializers/adapter/json.rb
+  - デフォルトでjsonアダプターとjson:apiアダプターがmetaに対応している
+    - metaのkeyの名前も指定できる
+    ```ruby
+    render json: @comments, meta: { total: @comments.count }, meta_key: "memetaa"
+    ```
+    ```json
+    {
+      "comments": [
+        {
+          "id": 1,
+          "title": "titleA",
+          "body": "bodyA"
+        }
+      ],
+      "memeta": {
+        "count": 8
+      }
+    }
+    ```
 - ルートキーをcamelとかback camelとかunder scoreとか変更できる
   - https://github.com/rails-api/active_model_serializers/blob/master/docs/general/key_transforms.md
 
