@@ -227,3 +227,25 @@ TODO: 複雑なJSONをレンダリングするサンプル
 - メジャーバージョンを切っていないので不安要素は残るが、実戦投入するには問題なさそう
   - issue見て、クリティカルなバグがないことを確認すべき
 - AMS関係ないけど、metaを入れたくなったときに、許容できるような設計にしておくべき
+
+
+
+- 突然カスタムフィールドをレンダリングしたくなる発作が出たら
+```ruby
+class SampleSerializer < ApplicationSerializer
+  attributes :id, :name, :birthday
+  
+  attribute :age do
+    object.age
+  end
+end
+```
+
+```json
+{
+  "id": 1,
+  "name": "hogehoge",
+  "birthday": "1995-02-10",
+  "age": 21
+}
+```

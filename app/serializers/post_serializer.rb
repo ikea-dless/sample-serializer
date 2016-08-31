@@ -5,7 +5,8 @@ class PostSerializer < ApplicationSerializer
     Comment.new(name: 'hoge')
   end
 
-  def body
-    "special #{object.body}"
+  attribute :user_name do
+    "user_name"
   end
+
 end
